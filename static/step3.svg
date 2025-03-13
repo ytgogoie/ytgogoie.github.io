@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <style>
+    .format-box { fill: white; stroke: #d1d5db; stroke-width: 2; }
+    .format-text { font-family: system-ui; font-size: 14px; fill: #374151; }
+    .quality-text { font-family: system-ui; font-size: 12px; fill: #6b7280; }
+  </style>
+  <rect class="format-box" x="50" y="50" width="700" height="60" rx="6"/>
+  <text class="format-text" x="70" y="85">1080p - MP4</text>
+  <text class="quality-text" x="670" y="85">HD Quality</text>
+  
+  <rect class="format-box" x="50" y="120" width="700" height="60" rx="6"/>
+  <text class="format-text" x="70" y="155">720p - MP4</text>
+  <text class="quality-text" x="670" y="155">HD Quality</text>
+  
+  <rect class="format-box" x="50" y="190" width="700" height="60" rx="6"/>
+  <text class="format-text" x="70" y="225">480p - MP4</text>
+  <text class="quality-text" x="670" y="225">SD Quality</text>
+</svg>

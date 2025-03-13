@@ -1,0 +1,324 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>YouTube Video Downloader - Download YouTube Videos for Free</title>
+    <meta name="description" content="Download YouTube videos in high quality MP4 and WebM formats. Our free YouTube downloader supports 360p, 480p, 720p and 1080p resolution videos.">
+    <meta name="keywords" content="youtube downloader, youtube video downloader, download youtube videos, youtube mp4 download, 1080p youtube download, 720p youtube download">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="YouTube Video Downloader - Download Videos in HD">
+    <meta property="og:description" content="Download YouTube videos in high quality formats. Fast, free and easy to use.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
+    <link rel="canonical" href="{{ request.url }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        darkMode: 'class',
+        theme: {
+            extend: {
+                colors: {
+                    red: {
+                        600: '#dc2626',
+                        700: '#b91c1c'
+                    }
+                }
+            }
+        }
+    }
+</script>
+    <!-- Preconnect to domains we'll use -->
+    <link rel="preconnect" href="https://youtube.com">
+    <link rel="preconnect" href="https://www.youtube.com">
+    <link rel="preconnect" href="https://i.ytimg.com">
+    <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
+    <!-- Schema.org markup for Google -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "YouTube Video Downloader",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Download YouTube videos in multiple formats and resolutions including 360p, 480p, 720p, and 1080p. Fast, free, and easy to use.",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "1024"
+      }
+    }
+    </script>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-md">
+        <nav class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center space-x-2">
+                        <svg class="w-7 h-7 md:w-8 md:h-8 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 4-8 4z" />
+                        </svg>
+                        <span class="text-lg md:text-xl font-bold text-gray-900 dark:text-white">YouTube
+                            Downloader</span>
+                    </a>
+                </div>
+                <div>
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700">
+                        <svg class="w-5 h-5 md:w-6 md:h-6 dark:hidden" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                        <svg class="w-5 h-5 md:w-6 md:h-6 hidden dark:block text-yellow-300" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="min-h-screen">
+        <div class="container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto">
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                        YouTube Video Downloader
+                    </h1>
+                    <p class="text-gray-600 dark:text-gray-400 text-base sm:text-lg">
+                        Download videos from YouTube in high quality
+                    </p>
+                </div>
+
+                <!-- Form -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-4 sm:p-8 mb-8">
+                    <form id="url-form" class="space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
+                            <div class="flex-grow">
+                                <input type="url" id="url" name="url" required
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500"
+                                    placeholder="Paste YouTube URL here..." />
+                            </div>
+                            <div class="mt-3 sm:mt-0">
+                                <button type="submit"
+                                    class="w-full sm:w-auto px-6 py-3 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium flex items-center justify-center space-x-2 download-btn">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                    <span>Download Video</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div id="loading" class="hidden mb-8">
+                    <div class="flex justify-center items-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+                    </div>
+                </div>
+
+                <!-- Video Info -->
+                <div id="video-info" class="hidden bg-white dark:bg-gray-800 rounded-xl shadow-xl p-4 sm:p-8 mb-8">
+                    <div class="space-y-4 sm:space-y-6">
+                        <div class="flex flex-col sm:flex-row items-start sm:space-x-6 space-y-4 sm:space-y-0">
+                            <img id="video-thumbnail" class="w-full sm:w-64 h-auto rounded-lg mx-auto sm:mx-0" src=""
+                                alt="Video thumbnail">
+                            <div class="w-full mt-3 sm:mt-0">
+                                <h2 id="video-title"
+                                    class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2 text-center sm:text-left">
+                                </h2>
+                                <p id="video-duration"
+                                    class="text-base sm:text-lg text-gray-600 dark:text-gray-400 text-center sm:text-left">
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Available Formats -->
+                        <div>
+                            <h3 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                                Available Formats
+                            </h3>
+                            <div id="format-list">
+                                <!-- Format items will be added here dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                <div id="error-message" class="hidden bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 p-4 rounded-lg mb-8">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span></span>
+                    </div>
+                </div>
+
+                <!-- How It Works -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-4 sm:p-8">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">How It Works</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Step 1 -->
+                        <div class="text-center">
+                            <div class="mb-4">
+                                <img src="{{ url_for('static', filename='step1.svg') }}" alt="Copy URL"
+                                    class="w-full max-w-xs mx-auto">
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">1. Copy URL</h3>
+                            <p class="text-gray-600 dark:text-gray-400">
+                                Copy the URL of the YouTube video you want to download
+                            </p>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="text-center">
+                            <div class="mb-4">
+                                <img src="{{ url_for('static', filename='step2.svg') }}" alt="Paste URL"
+                                    class="w-full max-w-xs mx-auto">
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">2. Paste URL</h3>
+                            <p class="text-gray-600 dark:text-gray-400">
+                                Paste the URL in the box above and click "Download Video"
+                            </p>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="text-center">
+                            <div class="mb-4">
+                                <img src="{{ url_for('static', filename='step3.svg') }}" alt="Choose format"
+                                    class="w-full max-w-xs mx-auto">
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">3. Download</h3>
+                            <p class="text-gray-600 dark:text-gray-400">
+                                Choose your preferred video quality and start downloading
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- FAQ Section -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-4 sm:p-8 mt-8">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">Frequently Asked Questions</h2>
+                    <div class="space-y-3" id="faq-accordion">
+                        <!-- FAQ Item 1 -->
+                        <div class="faq-item bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden transition-all duration-300 shadow-sm hover:shadow-md">
+                            <button type="button" class="faq-question w-full px-5 py-4 text-left flex justify-between items-center focus:outline-none">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Is this service completely free?</h3>
+                                <svg class="w-5 h-5 text-gray-500 dark:text-gray-300 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="faq-answer px-5 pb-4 hidden">
+                                <p class="text-gray-600 dark:text-gray-400">
+                                    Yes, our YouTube video downloader is completely free to use with no hidden fees or subscriptions required.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- FAQ Item 2 -->
+                        <div class="faq-item bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden transition-all duration-300 shadow-sm hover:shadow-md">
+                            <button class="faq-question w-full px-5 py-4 text-left flex justify-between items-center focus:outline-none">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">What video formats are supported?</h3>
+                                <svg class="w-5 h-5 text-gray-500 dark:text-gray-300 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="faq-answer px-5 pb-4 hidden">
+                                <p class="text-gray-600 dark:text-gray-400">
+                                    We support downloading videos in MP4 and WebM formats with various quality options from 360p up to 1080p, depending on what's available from the source video.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- FAQ Item 3 -->
+                        <div class="faq-item bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden transition-all duration-300 shadow-sm hover:shadow-md">
+                            <button class="faq-question w-full px-5 py-4 text-left flex justify-between items-center focus:outline-none">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Can I download videos from YouTube Shorts?</h3>
+                                <svg class="w-5 h-5 text-gray-500 dark:text-gray-300 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="faq-answer px-5 pb-4 hidden">
+                                <p class="text-gray-600 dark:text-gray-400">
+                                    Yes, our service supports downloading videos from regular YouTube videos as well as YouTube Shorts.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- FAQ Item 4 -->
+                        <div class="faq-item bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden transition-all duration-300 shadow-sm hover:shadow-md">
+                            <button class="faq-question w-full px-5 py-4 text-left flex justify-between items-center focus:outline-none">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Is there a limit to how many videos I can download?</h3>
+                                <svg class="w-5 h-5 text-gray-500 dark:text-gray-300 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="faq-answer px-5 pb-4 hidden">
+                                <p class="text-gray-600 dark:text-gray-400">
+                                    There is no specific limit to the number of videos you can download, but please be mindful of our server resources by avoiding excessive use.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- FAQ Item 5 -->
+                        <div class="faq-item bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden transition-all duration-300 shadow-sm hover:shadow-md">
+                            <button class="faq-question w-full px-5 py-4 text-left flex justify-between items-center focus:outline-none">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">How do I save the downloaded video to my device?</h3>
+                                <svg class="w-5 h-5 text-gray-500 dark:text-gray-300 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="faq-answer px-5 pb-4 hidden">
+                                <p class="text-gray-600 dark:text-gray-400">
+                                    After clicking the download button for your preferred format, your browser will either automatically save the file or prompt you to choose a save location depending on your browser settings.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 shadow-md mt-8">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left mb-4 md:mb-0">
+                    <p class="text-gray-600 dark:text-gray-400">
+                        © 2023 YouTube Downloader. All rights reserved.
+                    </p>
+                </div>
+                <div>
+                    <p class="text-gray-600 dark:text-gray-400 text-center md:text-right">
+                        Made with <span class="text-red-600">❤️</span> by YouTube Downloader Team
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

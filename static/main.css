@@ -1,0 +1,181 @@
+
+/* Custom styles on top of Tailwind */
+.format-container {
+    @apply w-full;
+}
+
+.format-quality {
+    @apply font-medium;
+}
+
+.format-badge {
+    @apply uppercase;
+}
+
+.download-btn {
+    @apply transition-all duration-200 transform hover:scale-[1.02];
+}
+
+.download-btn:disabled {
+    @apply opacity-50 cursor-not-allowed transform-none;
+}
+
+/* Mobile-first approach */
+#video-info .flex.items-start {
+    @apply flex-col sm:flex-row gap-4;
+}
+
+#video-info #video-thumbnail {
+    @apply w-full sm:w-64 mx-auto sm:mx-0 max-w-xs rounded-lg shadow-md;
+}
+
+/* Make video title responsive */
+#video-info #video-title {
+    @apply text-lg sm:text-xl break-words hyphens-auto;
+    word-wrap: break-word;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+@media (max-width: 640px) {
+    #video-info #video-title {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+}
+
+/* Format list items */
+#format-list .format-button {
+    @apply overflow-hidden transition-all duration-200;
+}
+
+/* Format list grid layout */
+#format-list {
+    @apply grid grid-cols-1 sm:grid-cols-2 gap-3;
+}
+
+@media (max-width: 640px) {
+    #format-list {
+        @apply grid-cols-1;
+    }
+}
+
+/* Format buttons style improvements */
+.format-quality {
+    @apply text-base sm:text-lg;
+}
+
+.format-badge {
+    @apply inline-flex items-center justify-center;
+}
+
+.download-format-button {
+    @apply w-full sm:w-auto text-sm sm:text-base;
+}
+
+/* Available formats heading */
+#format-list h3 {
+    @apply text-lg sm:text-xl mb-2 sm:mb-4;
+}
+
+/* Loading animation */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Download button animation */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(-5%);
+        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+        transform: translateY(0);
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+}
+
+.animate-bounce {
+    animation: bounce 1s infinite;
+}
+
+/* Dark mode transition */
+html {
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.dark {
+    color-scheme: dark;
+}
+
+/* Improved theme toggle button */
+#theme-toggle {
+    transition: all 0.2s ease-in-out;
+}
+
+#theme-toggle:hover {
+    transform: scale(1.1);
+    background-color: rgba(156, 163, 175, 0.2);
+}
+
+#theme-toggle:active {
+    transform: scale(0.95);
+}
+
+.dark #theme-toggle {
+    background-color: rgba(55, 65, 81, 0.8);
+}
+
+/* Custom input styles */
+input[type="url"] {
+    @apply text-base sm:text-lg;
+}
+
+input[type="url"]::placeholder {
+    @apply text-gray-400 text-sm sm:text-base;
+}
+
+/* FAQ Accordion Styles */
+.faq-item {
+    @apply overflow-hidden;
+}
+
+.faq-question {
+    @apply cursor-pointer relative;
+}
+
+.faq-question:hover h3 {
+    @apply text-red-600 dark:text-red-400;
+}
+
+.faq-question svg {
+    @apply transition-transform duration-300 ease-in-out;
+}
+
+.faq-answer {
+    @apply mt-1 transition-all duration-300 ease-in-out;
+}
+
+.faq-answer.hidden {
+    display: none;
+}
+
+.faq-answer:not(.hidden) {
+    @apply opacity-100 transform-none;
+    display: block;
+}
+
+/* Smooth transition for FAQ items */
+.faq-item {
+    @apply transition-all duration-200;
+}
+
+.faq-item:hover {
+    @apply transform -translate-y-0.5;
+}

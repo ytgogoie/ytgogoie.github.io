@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <style>
+    .browser { fill: #f3f4f6; stroke: #d1d5db; stroke-width: 2; }
+    .address-bar { fill: white; stroke: #d1d5db; }
+    .url-text { font-family: system-ui; font-size: 14px; fill: #374151; }
+    .highlight { fill: none; stroke: #3b82f6; stroke-width: 2; stroke-dasharray: 4,4; }
+  </style>
+  <rect class="browser" x="10" y="10" width="780" height="380" rx="8"/>
+  <rect class="address-bar" x="30" y="40" width="600" height="30" rx="4"/>
+  <text class="url-text" x="40" y="60">https://www.youtube.com/watch?v=dQw4w9WgXcQ</text>
+  <rect class="highlight" x="30" y="40" width="600" height="30" rx="4"/>
+</svg>

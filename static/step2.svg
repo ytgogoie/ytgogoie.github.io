@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <style>
+    .input-box { fill: white; stroke: #d1d5db; stroke-width: 2; }
+    .button { fill: #3b82f6; }
+    .button-text { font-family: system-ui; font-size: 14px; fill: white; text-anchor: middle; }
+    .label-text { font-family: system-ui; font-size: 14px; fill: #374151; }
+  </style>
+  <rect class="input-box" x="50" y="100" width="700" height="40" rx="6"/>
+  <text class="label-text" x="50" y="90">Paste YouTube URL here</text>
+  <rect class="button" x="50" y="160" width="700" height="40" rx="6"/>
+  <text class="button-text" x="400" y="185">Fetch Video Info</text>
+</svg>
