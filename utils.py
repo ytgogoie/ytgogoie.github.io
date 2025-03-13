@@ -92,8 +92,9 @@ def get_video_info(url):
             'skip_download': True,
             'format': 'bestvideo+bestaudio/best',
             'merge_output_format': 'mp4',
-            'cookiesfrombrowser': ('chrome',),  # Try to use browser cookies
-            'cookiefile': 'youtube.com_cookies.txt',  # Fallback to cookie file if exists
+            # Skip cookie loading as it's causing errors
+            # 'cookiesfrombrowser': ('chrome',),
+            # 'cookiefile': 'youtube.com_cookies.txt',
             'nocheckcertificate': True,
             'ignoreerrors': True,
         }
@@ -214,8 +215,9 @@ def download_video(url, format_id):
             'writethumbnail': False,  # Don't write thumbnail
             'quiet': False,  # Show progress
             'no_warnings': False,
-            'cookiesfrombrowser': ('chrome',),  # Try to use browser cookies
-            'cookiefile': 'youtube.com_cookies.txt',  # Fallback to cookie file if exists
+            # Skip cookie loading as it's causing errors
+            # 'cookiesfrombrowser': ('chrome',),
+            # 'cookiefile': 'youtube.com_cookies.txt',
             'nocheckcertificate': True,
             'ignoreerrors': True,
             'extractor_args': {'youtube': {'skip': ['webpage']}},
