@@ -1,4 +1,5 @@
 
+
 import os
 import logging
 from flask import Flask, render_template, request, jsonify, send_file
@@ -31,13 +32,18 @@ def fetch_info():
     try:
         url = request.form.get('url')
         if not url:
+            logger.error("Empty URL provided")
             return jsonify({'error': 'Please provide a valid YouTube URL'}), 400
 
+        # Log the URL being processed
+        logger.info(f"Processing URL: {url}")
+        
         video_info = get_video_info(url)
+        logger.info(f"Successfully fetched info for: {url}")
         return jsonify(video_info)
     except Exception as e:
-        logger.error(f"Error fetching video info: {str(e)}")
-        return jsonify({'error': str(e)}), 400
+        logger.error(f"Error fetching video info: {str(e)}", exc_info=True)
+        return jsonify({'error': 'Failed to extract video information. Please check if the URL is valid.'}), 400
 
 @app.route('/download', methods=['POST'])
 def download():
