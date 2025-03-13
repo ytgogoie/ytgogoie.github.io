@@ -101,6 +101,11 @@ def get_video_info(url):
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
+            
+            # Check if video info was properly extracted
+            if info is None:
+                logger.error(f"Failed to extract info for video: {url}")
+                raise Exception("Failed to extract video information. Please check if the URL is valid.")
 
             # Only select these key resolutions
             priority_heights = [360, 480, 720, 1080]
