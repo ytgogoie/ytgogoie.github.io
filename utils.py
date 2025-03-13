@@ -22,9 +22,26 @@ if not os.path.exists(DOWNLOAD_DIR):
 def is_valid_youtube_url(url):
     try:
         parsed = urlparse(url)
-        return parsed.netloc in ['www.youtube.com', 'youtube.com', 'youtu.be']
-    except:
+        valid_domains = ['www.youtube.com', 'youtube.com', 'youtu.be', 'm.youtube.com']
+        return parsed.netloc in valid_domains
+    except Exception as e:
+        logger.error(f"URL validation error: {str(e)}")
         return False
+        
+def normalize_youtube_url(url):
+    """Convert youtu.be URLs to full youtube.com URLs"""
+    try:
+        parsed = urlparse(url)
+        if parsed.netloc == 'youtu.be':
+            video_id = parsed.path.lstrip('/')
+            # Remove parameters from path if any
+            if '?' in video_id:
+                video_id = video_id.split('?')[0]
+            return f"https://www.youtube.com/watch?v={video_id}"
+        return url
+    except Exception as e:
+        logger.error(f"URL normalization error: {str(e)}")
+        return url
 
 def format_file_size(bytes):
     """Format file size from bytes to human-readable format"""
@@ -74,33 +91,41 @@ def get_video_info(url):
     """Get information about a YouTube video."""
     if not is_valid_youtube_url(url):
         raise ValueError("Not a valid YouTube URL")
-
+        
+    # Normalize the URL (convert youtu.be to youtube.com)
+    normalized_url = normalize_youtube_url(url)
+    logger.info(f"Original URL: {url}, Normalized URL: {normalized_url}")
+    
     # Check cache first
     current_time = time.time()
-    if url in VIDEO_INFO_CACHE:
-        cache_time, cache_data = VIDEO_INFO_CACHE[url]
+    if normalized_url in VIDEO_INFO_CACHE:
+        cache_time, cache_data = VIDEO_INFO_CACHE[normalized_url]
         if current_time - cache_time < CACHE_EXPIRY:
-            logger.info(f"Using cached info for video: {url}")
+            logger.info(f"Using cached info for video: {normalized_url}")
             return cache_data
 
     try:
-        logger.info(f"Fetching info for video: {url}")
+        logger.info(f"Fetching info for video: {normalized_url}")
 
         ydl_opts = {
-            'quiet': True,
-            'no_warnings': True,
+            'quiet': False,  # Enable output for debugging
+            'no_warnings': False,  # Show warnings
             'skip_download': True,
             'format': 'bestvideo+bestaudio/best',
             'merge_output_format': 'mp4',
-            # Skip cookie loading as it's causing errors
-            # 'cookiesfrombrowser': ('chrome',),
-            # 'cookiefile': 'youtube.com_cookies.txt',
             'nocheckcertificate': True,
-            'ignoreerrors': True,
+            'ignoreerrors': False,  # Don't ignore errors so we get detailed error messages
+            'verbose': True,  # More detailed output
+            'geo_bypass': True,  # Try to bypass geo-restrictions
+            'no_check_certificate': True,
+            'prefer_insecure': True,
+            'allow_unplayable_formats': True,
+            'extractor_args': {'youtube': {'skip': ['webpage']}},
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=False)
+            logger.info(f"Attempting to extract info with yt-dlp version: {yt_dlp.version.__version__}")
+            info = ydl.extract_info(normalized_url, download=False)
             
             # Check if video info was properly extracted
             if info is None:
@@ -207,7 +232,9 @@ def format_resolution(resolution):
 def download_video(url, format_id):
     """Download video with the specified format."""
     try:
-        logger.info(f"Downloading video: {url} with format: {format_id}")
+        # Normalize the URL first
+        normalized_url = normalize_youtube_url(url)
+        logger.info(f"Downloading video: {normalized_url} with format: {format_id}")
 
         # Create a timestamp for unique filenames
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -237,7 +264,10 @@ def download_video(url, format_id):
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=True)
+            info = ydl.extract_info(normalized_url, download=True)
+            if info is None:
+                logger.error(f"Failed to extract info for download: {normalized_url}")
+                raise Exception("Failed to extract video information for download. Please check if the URL is valid.")
             downloaded_file = ydl.prepare_filename(info)
 
         # Get just the filename without the directory
